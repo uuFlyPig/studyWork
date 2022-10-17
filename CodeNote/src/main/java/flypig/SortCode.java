@@ -1,5 +1,6 @@
 package flypig;
 
+
 import java.util.Arrays;
 
 /**
@@ -13,6 +14,7 @@ public class SortCode {
     public static void main(String[] args) {
         int[] A = {3,9,-1,10,20}; //0,1,2,3,4
         int[] B = {200,1,2,-1,-99,500,6};
+        int[] C = {8,9,1,7,2,3,5,4,6,0};
         System.out.println(Arrays.toString(A));
         SortCode sc = new SortCode();
         //优化前的冒泡
@@ -28,9 +30,18 @@ public class SortCode {
         sc.SelectSort(A);
         System.out.println(Arrays.toString(A));
 
-        sc.SelectSort(B);
+//        sc.SelectSort(B);
+//        System.out.println(Arrays.toString(B));
+
+        //插入排序
+        System.out.println(Arrays.toString(B));
+        sc.InsertionSort(B);
         System.out.println(Arrays.toString(B));
 
+        //希尔排序--优化版插入排序--交换版
+        System.out.println(Arrays.toString(C));
+        sc.shellSort(C);
+        System.out.println(Arrays.toString(C));
     }
 
     //最基础的冒泡排序，j的条件是数组长度-i，因为最大的到最后了就不需要再比较了
@@ -108,6 +119,69 @@ public class SortCode {
 
     }
 
+    /*
+       基本思想：将待排序数组分成两部分：一部分已排好序、初始为第一个元素，一部分未排序，将未排序好的数据一个个取出，
+                取出后往已排好序的部分进行比较插入排序即可
+       基本步骤：
+                1.从第一个元素开始，将第一个元素看作是已经排好的数。
+                2.取出下一个元素，然后与前面排好的元素相比（从后向前依次比较）。
+                3.直到这个元素遇到比他小的元素。
+                4.将新元素插入到该元素的后面。
+                5.重复以上步骤。
+     */
 
+    public void InsertionSort(int[] arr){
+        int insertVal;
+        int insertIndex;
+
+        //循环的从未排序好的数组中取值，所以i的初始值为1，进行循环
+        for (int i = 1; i < arr.length; i++) {
+            insertIndex = i-1;  //给待插入的位置附上初始值
+            insertVal = arr[i]; //将插入值赋值
+
+            //循环的将待插入值与排序好的数组比较，已排好序的数组中arr[insertIndex]一直都是最大值，
+//            进去后插入后index要减一，避免数组越界
+            while(insertIndex >=0 && insertVal < arr[insertIndex]){
+                arr[insertIndex +1] = arr[insertIndex];
+                insertIndex--;
+            }
+            //insertIndex+1就是插入位置
+            //如果满足条件，证明这次的insertVal是大于待插入的值的，所以不用交换位置，不用插入值
+            if(insertIndex +1 != i){
+                arr[insertIndex+1] = insertVal;
+            }
+
+        }
+
+    }
+
+
+    /*
+    基本思路：是插入排序的改良版本、设定初始增量gap=length/2，表示第一轮：数组[0]与数组[0+gap]进行交换，
+        第二轮再缩小增量gap=(length/2)/2,数组[0]与数组[0+gap]进行交换，把小的换到前面
+        最后的增量变成了1，进行数组[0]与数组[0+1]的比较，循环比较。
+        最后一轮的比较是以插入排序进行排序，比较的效率会提高
+
+    基本步骤：
+        在有序序列中插入采用交换法：
+            第一个循环for(int gap = arr.length/2;gap>=0;gap/=2){
+            第二个循环for(int i=gap;i<arr.length;i++)
+            第三个循环for(int j=i-gap;j>=0;j-=gap)
+     */
+    public void shellSort(int[] arr){
+        int temp;
+        for(int gap = arr.length/2;gap>0;gap/=2){
+            for(int i = gap;i<arr.length;i++){
+                for(int j = i-gap;j>=0;j-=gap){
+
+                    if(arr[j]>arr[j+gap]){
+                        temp = arr[j];
+                        arr[j] = arr[j+gap];
+                        arr[j+gap] = temp;
+                    }
+                }
+            }
+        }
+    }
 
 }
