@@ -34,14 +34,19 @@ public class SortCode {
 //        System.out.println(Arrays.toString(B));
 
         //插入排序
-        System.out.println(Arrays.toString(B));
-        sc.InsertionSort(B);
-        System.out.println(Arrays.toString(B));
+//        System.out.println(Arrays.toString(B));
+//        sc.InsertionSort(B);
+//        System.out.println(Arrays.toString(B));
 
         //希尔排序--优化版插入排序--交换版
         System.out.println(Arrays.toString(C));
         sc.shellSort(C);
         System.out.println(Arrays.toString(C));
+
+        //希尔排序--优化版插入排序--移位版
+        System.out.println(Arrays.toString(B));
+        sc.shellSort2(B);
+        System.out.println(Arrays.toString(B));
     }
 
     //最基础的冒泡排序，j的条件是数组长度-i，因为最大的到最后了就不需要再比较了
@@ -120,6 +125,7 @@ public class SortCode {
     }
 
     /*
+       插入排序：
        基本思想：将待排序数组分成两部分：一部分已排好序、初始为第一个元素，一部分未排序，将未排序好的数据一个个取出，
                 取出后往已排好序的部分进行比较插入排序即可
        基本步骤：
@@ -157,6 +163,7 @@ public class SortCode {
 
 
     /*
+    希尔排序
     基本思路：是插入排序的改良版本、设定初始增量gap=length/2，表示第一轮：数组[0]与数组[0+gap]进行交换，
         第二轮再缩小增量gap=(length/2)/2,数组[0]与数组[0+gap]进行交换，把小的换到前面
         最后的增量变成了1，进行数组[0]与数组[0+1]的比较，循环比较。
@@ -182,6 +189,30 @@ public class SortCode {
                 }
             }
         }
+    }
+
+    //对交换式的希尔排序进行优化-》移位法
+    public void shellSort2(int[] arr){
+        //增量gap,并逐步的缩小增量
+        for(int gap=arr.length/2;gap>0;gap/=2){
+            //从第gap个元素，逐个对其所在的组进行直接插入排序
+            for (int i = gap; i < arr.length; i++) {
+                int j = i;
+                int temp = arr[j];
+                if(arr[j]<arr[j-gap]){
+                    while(j-gap>=0&&temp<arr[j-gap]){
+                        //移动
+                        arr[j] = arr[j-gap];
+                        j-=gap;
+                    }
+
+                    //当退出while则找到了插入位置
+                    arr[j] = temp;
+                }
+            }
+        }
+
+
     }
 
 }
